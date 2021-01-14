@@ -12,7 +12,7 @@ from typing import List, Optional
 from config import ConfigurationSet, InterpolateEnumType
 from roast.confParser import generate_conf
 from roast.component.basebuild import Basebuild
-from roast.component import scenario, Scenario
+from roast.component.scenario import scenario, Scenario
 from roast.component.board.board import Board
 from roast.utils import overrides, has_key, filter_keys, load_yaml, filter_dict
 
@@ -103,6 +103,8 @@ def pytest_collection_modifyitems(session, config, items):
 def pytest_configure(config):
     config.cache.set("override", config.getoption("override"))
     config.cache.set("machine", config.getoption("machine"))
+    pytest.override = config.getoption("override")
+    pytest.machine = config.getoption("machine")
 
 
 @pytest.fixture
@@ -307,3 +309,15 @@ def pytest_sessionfinish(session, exitstatus):
 
     if exitstatus == no_tests_collected:
         session.exitstatus = ok
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_runtest_setup(item):
+    """ Called to perform the setup phase for a test item. """
+    print(f"\nTest: {item.name} Started...\n")
+
+
+@pytest.hookimpl(trylast=True)
+def pytest_runtest_teardown(item, nextitem):
+    """ Called to perform the teardown phase for a test item. """
+    print(f"\nTest: {item.name} Finished...\n")
