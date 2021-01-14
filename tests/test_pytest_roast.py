@@ -6,7 +6,8 @@
 import os
 import pytest
 from pytest_cases import parametrize_with_cases, parametrize
-from roast.component.board.board import Board, TargetBoard
+from roast.component.board.board import Board
+from roast.component.board.target_board import TargetBoard
 from config import InterpolateEnumType
 
 
