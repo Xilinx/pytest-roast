@@ -101,19 +101,8 @@ def pytest_collection_modifyitems(session, config, items):
 
 
 def pytest_configure(config):
-    config.cache.set("override", config.getoption("override"))
-    config.cache.set("machine", config.getoption("machine"))
     pytest.override = config.getoption("override")
-    pytest.machine = config.getoption("machine")
-
-
-@pytest.fixture
-def get_cmdl_machine_opt(request):
-    machine = request.config.cache.get("machine", None)
-    if machine:
-        return machine[0].split(",")
-    else:
-        return None
+    pytest.machine = config.getoption("machine")[0] if config.getoption("machine") else None
 
 
 @pytest.fixture
@@ -131,7 +120,9 @@ def create_configuration(request):
         if test_name is None:
             test_name = get_test_name(request.node.name)
         if overrides is None:
-            overrides = request.config.cache.get("override", None)
+            overrides = pytest.override
+        if machine == "":
+            machine = pytest.machine
         return generate_conf(
             rootdir,
             fspath,

@@ -5,7 +5,6 @@
 
 import os
 import pytest
-from pytest_cases import parametrize_with_cases, parametrize
 from roast.component.board.board import Board
 from roast.component.board.target_board import TargetBoard
 from config import InterpolateEnumType
@@ -18,18 +17,12 @@ def setup_env(request):
     os.chdir(rootdir)
 
 
-@parametrize(i=range(2))
-def case_from_cache(i, get_cmdl_machine_opt):
-    return get_cmdl_machine_opt[i]
-
-
-@parametrize_with_cases("machine", cases=".")
-def test_create_configuration(request, create_configuration, machine, mocker):
+def test_create_configuration(request, create_configuration, mocker):
     rootdir = request.config.rootdir.strpath
     fspath = request.node.fspath
     test_name = request.node.name
     mock_generate_conf = mocker.patch("pytest_roast.generate_conf")
-    create_configuration(test_name=test_name, machine=machine)
+    create_configuration(test_name=test_name)
     mock_generate_conf.assert_called_with(
         rootdir,
         fspath,
@@ -37,7 +30,7 @@ def test_create_configuration(request, create_configuration, machine, mocker):
         base_params=None,
         params=None,
         overrides=["tests/main/conf.py"],
-        machine=machine,
+        machine="zynq",
         interpolate_type=InterpolateEnumType.STANDARD,
     )
 
