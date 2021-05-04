@@ -21,7 +21,7 @@ long_description = read("README.md")
 
 setup(
     name="pytest-roast",
-    version="1.2.0",
+    version="1.2.0.post1",
     description="pytest plugin for ROAST configuration override and fixtures",
     long_description=long_description,
     long_description_content_type="text/markdown",
