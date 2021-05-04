@@ -1,0 +1,3 @@
+pytest==6.2.2
+roast==2.1.0
+roast-xilinx==2.1.0

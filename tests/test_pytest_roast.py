@@ -10,26 +10,20 @@ from roast.component.board.target_board import TargetBoard
 from config import InterpolateEnumType
 
 
-@pytest.fixture
-def setup_env(request):
-    rootdir = request.config.rootdir.strpath
-    yield
-    os.chdir(rootdir)
-
-
 def test_create_configuration(request, create_configuration, mocker):
     rootdir = request.config.rootdir.strpath
     fspath = request.node.fspath
     test_name = request.node.name
     mock_generate_conf = mocker.patch("pytest_roast.generate_conf")
-    create_configuration(test_name=test_name)
+    overrides = ["version=2021.1"]
+    create_configuration(test_name=test_name, overrides=overrides)
     mock_generate_conf.assert_called_with(
         rootdir,
         fspath,
         test_name,
         base_params=None,
         params=None,
-        overrides=["tests/main/conf.py"],
+        overrides=["version=2021.1", "tests/main/conf.py"],
         machine="zynq",
         interpolate_type=InterpolateEnumType.STANDARD,
     )
@@ -56,22 +50,7 @@ def test_board_fixture(board, mocker):
     assert isinstance(bb, TargetBoard)
 
 
-def test_get_board_fixture(request, get_board, mocker, setup_env):
-    mocker.patch.object(TargetBoard, "start")
-    b = get_board(board_type="network_target")
-    assert isinstance(b, TargetBoard)
-    os.chdir(request.config.rootdir.strpath)
-    bb = get_board(board_type="host_target")
-    assert isinstance(bb, TargetBoard)
-
-
 def test_board_exception(board, mocker):
     mocker.patch.object(TargetBoard, "start")
     with pytest.raises(Exception):
         b = board()
-
-
-def test_get_board_exception(get_board, mocker):
-    mocker.patch.object(TargetBoard, "start")
-    with pytest.raises(Exception):
-        bb = get_board()
