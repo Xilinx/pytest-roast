@@ -15,7 +15,8 @@ from roast.component.board.board import Board
 
 def pytest_addoption(parser):
     parser.addoption("--override", action="store", nargs="+", type=str, default="")
-    parser.addoption("--machine", action="store", nargs="+", type=str, default=None)
+    parser.addoption("--machine", action="store", type=str, default=None)
+    parser.addoption("--randomize", action="store_true", default=False)
 
 
 def pytest_configure(config):
@@ -23,8 +24,9 @@ def pytest_configure(config):
         config.getoption("override") if config.getoption("override") else []
     )
     pytest.machine = (
-        config.getoption("machine")[0] if config.getoption("machine") else None
+        config.getoption("machine") if config.getoption("machine") else None
     )
+    pytest.randomize = config.getoption('randomize')
 
 
 @pytest.fixture
@@ -42,9 +44,9 @@ def create_configuration(request):
         if test_name is None:
             test_name = get_test_name(request.node.name)
         if overrides is None:
-            overrides = pytest.override
+            overrides = pytest.override + [f"randomize={pytest.randomize}"]
         else:
-            overrides = overrides + pytest.override
+            overrides = overrides + pytest.override + [f"randomize={pytest.randomize}"]
         if machine == "":
             machine = pytest.machine
         return generate_conf(

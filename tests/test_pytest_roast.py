@@ -23,7 +23,7 @@ def test_create_configuration(request, create_configuration, mocker):
         test_name,
         base_params=None,
         params=None,
-        overrides=["version=2021.1", "tests/main/conf.py"],
+        overrides=["version=2021.1", "tests/main/conf.py", "randomize=True"],
         machine="zynq",
         interpolate_type=InterpolateEnumType.STANDARD,
     )

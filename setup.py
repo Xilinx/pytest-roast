@@ -21,7 +21,7 @@ long_description = read("README.md")
 
 setup(
     name="pytest-roast",
-    version="1.2.0.post1",
+    version="1.3.0",
     description="pytest plugin for ROAST configuration override and fixtures",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -42,6 +42,6 @@ setup(
     license="MIT",
     entry_points={"pytest11": ["roast = pytest_roast"]},
     install_requires=["pytest", "roast>=2.0.0"],
-    extras_require={"dev": ["pytest-mock", "pytest-black"]},
+    extras_require={"dev": ["pytest-mock", "pytest-black", "coverage"]},
     python_requires=">=3.6, <4",
 )
